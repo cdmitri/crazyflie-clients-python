@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #     ||          ____  _ __
@@ -77,6 +78,7 @@ class LoggingExample:
         print "Connected to %s" % link_uri
 
         # The definition of the logconfig can be made before connecting
+#        self._lg_stab = LogConfig(name="Stabilizer", period_in_ms=10)
         self._lg_stab = LogConfig(name="Stabilizer", period_in_ms=10)
         self._lg_stab.add_variable("stabilizer.roll", "float")
         self._lg_stab.add_variable("stabilizer.pitch", "float")
@@ -97,7 +99,7 @@ class LoggingExample:
             print("Could not add logconfig since some variables are not in TOC")
 
         # Start a timer to disconnect in 10s
-        t = Timer(5, self._cf.close_link)
+        t = Timer(100, self._cf.close_link)
         t.start()
 
     def _stab_log_error(self, logconf, msg):
@@ -128,16 +130,21 @@ if __name__ == '__main__':
     # Initialize the low-level drivers (don't list the debug drivers)
     cflib.crtp.init_drivers(enable_debug_driver=False)
     # Scan for Crazyflies and use the first one found
-    print "Scanning interfaces for Crazyflies..."
-    available = cflib.crtp.scan_interfaces()
-    print "Crazyflies found:"
-    for i in available:
-        print i[0]
+#    print "Scanning interfaces for Crazyflies..."
+#    available = cflib.crtp.scan_interfaces()
+#    print "Crazyflies found:"
+#    for i in available:
+#        print i[0]
 
-    if len(available) > 0:
-        le = LoggingExample(available[0][0])
-    else:
-        print "No Crazyflies found, cannot run example"
+    uri_link = "radio://0/80/250K"
+    print "Trying to connect to", uri_link
+
+    le = LoggingExample(uri_link)
+
+#    if len(available) > 0:
+#        le = LoggingExample(available[0][0])
+#    else:
+#        print "No Crazyflies found, cannot run example"
 
     # The Crazyflie lib doesn't contain anything to keep the application alive,
     # so this is where your application should do something. In our case we
